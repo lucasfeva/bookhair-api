@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  laravel:
+    image: bitnami/laravel:latest
+    container_name: bookhair_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+      DB_DATABASE: bookhair
+    depends_on:
+      - mariadb
+    networks:
+      - bookhair_net
+
+  mariadb:
+    image: mariadb:10.6
+    container_name: bookhair_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: bookhair
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - bookhair_net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: bookhair_pma
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mariadb
+      MYSQL_ROOT_PASSWORD: secret
+    networks:
+      - bookhair_net
+
+networks:
+  bookhair_net:
+
+volumes:
+  db_data:
