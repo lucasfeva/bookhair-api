@@ -18,20 +18,7 @@ O **BookHair API** é o backend do aplicativo BookHair, responsável por fornece
 ## 📁 Estrutura do Projeto
 
 ```
-bookhair-api/
-├── src/
-│   ├── controllers/        # Lógica dos endpoints da API
-│   ├── models/             # Modelos Mongoose (Barbearia, Serviço, Usuário, Agendamento)
-│   ├── routes/             # Definição das rotas da API
-│   ├── middlewares/        # Autenticação, validação, tratamento de erros
-│   ├── services/           # Lógica de negócios e integrações externas
-│   ├── config/             # Configurações de ambiente, banco de dados, etc.
-│   └── app.js              # Configuração principal do Express
-├── .env.example            # Variáveis de ambiente (exemplo)
-├── Dockerfile              # Dockerfile para containerização
-├── docker-compose.yml      # Configuração do Docker Compose
-├── README.md               # Documentação do projeto
-└── package.json            # Dependências e scripts
+
 ```
 
 ---
