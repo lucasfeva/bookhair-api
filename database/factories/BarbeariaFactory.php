@@ -26,6 +26,8 @@ class BarbeariaFactory extends Factory
         return [
             'nome'     => $this->faker->company(),
             'endereco' => $this->faker->address(),
+            'latitude'  => $this->faker->latitude(),
+            'longitude' => $this->faker->longitude(),
             'telefone' => $this->faker->phoneNumber(),
             'email'    => $this->faker->unique()->companyEmail(),
         ];

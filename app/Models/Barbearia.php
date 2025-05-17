@@ -19,6 +19,8 @@ class Barbearia extends Model
     protected $fillable = [
         'nome',
         'endereco',
+        'latitude',
+        'longitude',
         'telefone',
         'email',
     ];
