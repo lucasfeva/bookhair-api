@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AgendamentoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -65,6 +66,18 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{id}',              [ProfissionalController::class, 'destroy']);
             Route::post('/{id}/servicos/{serviceId}',   [ProfissionalController::class, 'assignService']);
             Route::delete('/{id}/servicos/{serviceId}',   [ProfissionalController::class, 'removeService']);
+        });
+
+        Route::prefix('agendamentos')->group(function () {
+            // Filtros e listagem
+            Route::get('',                 [AgendamentoController::class, 'index']);
+            // CRUD e cancelamento
+            Route::get('/{id}',            [AgendamentoController::class, 'show']);
+            Route::post('',                 [AgendamentoController::class, 'store']);
+            Route::put('/{id}',            [AgendamentoController::class, 'update']);
+            Route::post('/{id}/cancel',     [AgendamentoController::class, 'cancel']);
+            // Histórico do cliente
+            Route::get('/history/{userId}', [AgendamentoController::class, 'history']);
         });
     });
 });
