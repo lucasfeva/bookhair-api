@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BarbeariaController;
+use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\ProfissionalController;
 use App\Http\Controllers\API\ServicoController;
 use App\Http\Controllers\API\UserController;
@@ -78,6 +79,9 @@ Route::prefix('v1')->group(function () {
             Route::post('/{id}/cancel',     [AgendamentoController::class, 'cancel']);
             // Histórico do cliente
             Route::get('/history/{userId}', [AgendamentoController::class, 'history']);
+        });
+        Route::prefix('dashboard')->group(function () {
+            Route::get('stats',    [DashboardController::class, 'statsMonthly']);
         });
     });
 });
