@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use Auth;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -14,20 +15,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class AuthController extends Controller
 {
 
-
-
-
+    /**
+     * Registra um novo usuário e retorna token de acesso.
+     */
     public function register(RegisterRequest $request): JsonResponse
     {
+        // Validação realizada em RegisterRequest
         $data = $request->validated();
-
         $data['password'] = Hash::make($data['password']);
 
         try {
             $user = User::create($data);
         } catch (QueryException $e) {
             // Em MySQL, erro 1062 = Duplicate entry (SQLSTATE 23000)
-             
+
             if (
 
                 $e->getCode() === '23000'
@@ -41,7 +42,7 @@ class AuthController extends Controller
             throw $e;
         }
 
-        // Gera token de API
+        // Cria token via Sanctum
         $token = $user->createToken('API Token')->plainTextToken;
 
         return response()->json([
@@ -50,6 +51,9 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Autentica usuário e retorna token.
+     */
     public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->validated();
@@ -70,6 +74,40 @@ class AuthController extends Controller
         return response()->json([
             'user'  => $user,
             'token' => $token,
+        ], 200);
+    }
+
+    /**
+     * Revoga todos os tokens do usuário logado.
+     */
+    public function logout(): JsonResponse
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Revoga todos os tokens ativos
+        $user->tokens()->delete();
+
+        return response()->json([
+            'message' => 'Logout realizado com sucesso.'
+        ], 200);
+    }
+
+    /**
+     * Gera novo token invalidando o anterior.
+     */
+    public function refreshToken(): JsonResponse
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Opcional: deletar token atual ou todos
+        $user->currentAccessToken()->delete();
+
+        $newToken = $user->createToken('API Token')->plainTextToken;
+
+        return response()->json([
+            'token' => $newToken,
         ], 200);
     }
 }
