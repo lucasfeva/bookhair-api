@@ -1,1 +1,102 @@
-git add -A && git diff --cached --diff-filter=ACDMR >> comit.txt
+git add -A && git diff --cached --diff-filter=ACDMR > comit.txtdiff --git a/app/Http/Controllers/API/UserController.php b/app/Http/Controllers/API/UserController.php
+new file mode 100644
+index 0000000..6ac0724
+--- /dev/null
++++ b/app/Http/Controllers/API/UserController.php
+@@ -0,0 +1,29 @@
++<?php
++
++namespace App\Http\Controllers\API;
++
++use App\Http\Controllers\Controller;
++use App\Http\Requests\UpdateUserRequest;
++use Illuminate\Http\JsonResponse;
++use Illuminate\Support\Facades\Auth;
++
++class UserController extends Controller
++{
++    // Retorna perfil do usuário autenticado
++    public function getProfile(): JsonResponse
++    {
++        return response()->json(Auth::user());
++    }
++
++    // Atualiza dados do perfil
++    public function updateProfile(UpdateUserRequest $request): JsonResponse
++    {
++        $user = Auth::user();
++        $user->update($request->validated());
++
++        return response()->json([
++            'message' => 'Perfil atualizado com sucesso',
++            'user'    => $user,
++        ]);
++    }
++}
+diff --git a/app/Http/Requests/UpdateUserRequest.php b/app/Http/Requests/UpdateUserRequest.php
+new file mode 100644
+index 0000000..2ea4ee3
+--- /dev/null
++++ b/app/Http/Requests/UpdateUserRequest.php
+@@ -0,0 +1,31 @@
++<?php
++
++namespace App\Http\Requests;
++
++use Illuminate\Foundation\Http\FormRequest;
++use Illuminate\Validation\Rule;
++use Illuminate\Support\Facades\Auth;
++
++class UpdateUserRequest extends FormRequest
++{
++    public function authorize()
++    {
++        // Só permite o próprio usuário
++        return Auth::check();
++    }
++
++    public function rules()
++    {
++        return [
++            'nome'     => 'sometimes|required|string|max:255',
++            'email'    => [
++                'sometimes',
++                'required',
++                'email',
++                Rule::unique('users','email')->ignore(Auth::id()),
++            ],
++            'telefone' => 'nullable|string',
++            'endereco' => 'nullable|string',
++        ];
++    }
++}
+diff --git a/routes/api.php b/routes/api.php
+index 56668ba..4d060fc 100644
+--- a/routes/api.php
++++ b/routes/api.php
+@@ -6,6 +6,7 @@
+ 
+ use App\Http\Controllers\API\AuthController;
+ use App\Http\Controllers\API\BarbeariaController;
++use App\Http\Controllers\API\UserController;
+ 
+ Route::prefix('v1')->group(function () {
+     Route::prefix('auth')->group(function () {
+@@ -20,12 +21,15 @@
+ 
+ 
+     Route::middleware('auth:sanctum')->group(function () {
+-
++        Route::middleware('auth:sanctum')->prefix('user')->group(function () {
++            Route::get('/',       [UserController::class, 'getProfile']);
++            Route::put('/',       [UserController::class, 'updateProfile']);
++        });
+ 
+ 
+         Route::prefix('barbearias')->group(function () {
+             Route::get('',              [BarbeariaController::class, 'index']);
+-            Route::get('/{id}',         [BarbeariaController::class, 'show'])  ->whereNumber('id');;
++            Route::get('/{id}',         [BarbeariaController::class, 'show'])->whereNumber('id');;
+             Route::post('',             [BarbeariaController::class, 'store']);
+             Route::put('/{id}',         [BarbeariaController::class, 'update']);
+             Route::patch('/{id}',       [BarbeariaController::class, 'update']);
