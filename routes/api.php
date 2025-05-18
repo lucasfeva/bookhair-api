@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BarbeariaController;
+use App\Http\Controllers\API\ServicoController;
 use App\Http\Controllers\API\UserController;
 
 Route::prefix('v1')->group(function () {
@@ -39,6 +40,17 @@ Route::prefix('v1')->group(function () {
             Route::apiResource('', BarbeariaController::class)
                 ->parameters(['' => 'id'])
                 ->except(['create', 'edit']);
+        });
+
+        Route::prefix('servicos')->group(function () {
+
+            Route::get('', [ServicoController::class, 'index']);
+
+            // CRUD completo
+            Route::get('/{id}', [ServicoController::class, 'show']);
+            Route::post('',      [ServicoController::class, 'store']);
+            Route::put('/{id}', [ServicoController::class, 'update']);
+            Route::delete('/{id}', [ServicoController::class, 'destroy']);
         });
     });
 });
