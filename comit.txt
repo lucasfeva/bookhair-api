@@ -1,0 +1,1 @@
+git add -A && git diff --cached --diff-filter=ACDMR >> comit.txt
