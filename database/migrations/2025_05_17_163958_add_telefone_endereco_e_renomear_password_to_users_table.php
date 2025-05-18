@@ -12,10 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // renomeia coluna password para senha
-            $table->renameColumn('password', 'senha');
+            
             // novos campos
-            $table->string('telefone')->nullable()->after('senha');
+            $table->string('telefone')->nullable()->after('password');
             $table->string('endereco')->nullable()->after('telefone');
         });
     }
@@ -28,8 +27,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             // remove colunas adicionadas
             $table->dropColumn(['telefone', 'endereco']);
-            // reverte nome da coluna
-            $table->renameColumn('senha', 'password');
+            
         });
     }
 };

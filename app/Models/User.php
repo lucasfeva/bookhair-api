@@ -21,7 +21,7 @@ class User extends Authenticatable
     protected $fillable = [
         'nome',
         'email',
-        'senha',
+        'password',
         'telefone',
         'endereco',
     ];
@@ -32,13 +32,13 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'senha',
+        'password',
         'remember_token',
     ];
 
-    // -- Casts: senha deve ser hashed automaticamente
+    // -- Casts: password deve ser hashed automaticamente
     protected $casts = [
-        'senha' => 'hashed',
+        'password' => 'hashed',
     ];
 
 
@@ -57,11 +57,11 @@ class User extends Authenticatable
 
     /**
      * Laravel espera o atributo "password" para autenticação.
-     * Como renomeamos para "senha", precisamos sobrescrever:
+     * Como renomeamos para "password", precisamos sobrescrever:
      */
     public function getAuthPassword(): string
     {
-        return $this->senha;
+        return $this->password;
     }
 
     /**
