@@ -3,24 +3,31 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class BarbeariaRequest extends FormRequest
 {
-    public function authorize(): bool
+    public function authorize()
     {
-        return true; // ou verifique permissão via policies
+        return true; // ajuste se quiser usar policies
     }
 
-    public function rules(): array
+    public function rules()
     {
+        $barbeariaId = $this->route('id'); // para update
+
         return [
-            'nome'        => 'required|string|max:100',
-            'endereco'    => 'required|string',
-            'latitude'    => 'nullable|numeric',
-            'longitude'   => 'nullable|numeric',
-            'telefone'    => 'nullable|string|max:20',
-            'email'       => 'nullable|email'
-            // adicione outros campos conforme modelo
+            'nome'      => 'required|string|max:255',
+            'endereco'  => 'required|string',
+            'latitude'  => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+            'telefone'  => 'nullable|string|max:20',
+            'email'     => [
+                'required',
+                'email',
+                Rule::unique('barbearias','email')
+                    ->ignore($barbeariaId, 'id'),
+            ],
         ];
     }
 }

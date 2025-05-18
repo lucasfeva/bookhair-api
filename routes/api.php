@@ -28,13 +28,17 @@ Route::prefix('v1')->group(function () {
 
 
         Route::prefix('barbearias')->group(function () {
-            Route::get('',              [BarbeariaController::class, 'index']);
-            Route::get('/{id}',         [BarbeariaController::class, 'show'])->whereNumber('id');;
-            Route::post('',             [BarbeariaController::class, 'store']);
-            Route::put('/{id}',         [BarbeariaController::class, 'update']);
-            Route::patch('/{id}',       [BarbeariaController::class, 'update']);
-            Route::delete('/{id}',      [BarbeariaController::class, 'destroy']);
-            Route::get('/search',       [BarbeariaController::class, 'search']);
+            // buscas especiais
+            Route::get('search',       [BarbeariaController::class, 'search']);
+            Route::get('nearby',       [BarbeariaController::class, 'nearby']);
+            Route::get('{id}/servicos', [BarbeariaController::class, 'servicos']);
+            Route::get('{id}/profissionais', [BarbeariaController::class, 'profissionais']);
+            Route::get('{id}/agenda',  [BarbeariaController::class, 'agenda']);
+
+            // CRUD (index, store, update, destroy) — observe: caminho “vazio” para resource
+            Route::apiResource('', BarbeariaController::class)
+                ->parameters(['' => 'id'])
+                ->except(['create', 'edit']);
         });
     });
 });
