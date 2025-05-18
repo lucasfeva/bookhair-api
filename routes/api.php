@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BarbeariaController;
+use App\Http\Controllers\API\ProfissionalController;
 use App\Http\Controllers\API\ServicoController;
 use App\Http\Controllers\API\UserController;
 
@@ -51,6 +52,19 @@ Route::prefix('v1')->group(function () {
             Route::post('',      [ServicoController::class, 'store']);
             Route::put('/{id}', [ServicoController::class, 'update']);
             Route::delete('/{id}', [ServicoController::class, 'destroy']);
+        });
+
+
+        Route::prefix('profissionais')->group(function () {
+            Route::get('',                   [ProfissionalController::class, 'index']);
+            Route::get('/{id}',              [ProfissionalController::class, 'show']);
+            Route::get('/{id}/horarios',     [ProfissionalController::class, 'horarios']);
+            Route::get('/{id}/servicos',     [ProfissionalController::class, 'servicos']);
+            Route::post('',                   [ProfissionalController::class, 'store']);
+            Route::put('/{id}',              [ProfissionalController::class, 'update']);
+            Route::delete('/{id}',              [ProfissionalController::class, 'destroy']);
+            Route::post('/{id}/servicos/{serviceId}',   [ProfissionalController::class, 'assignService']);
+            Route::delete('/{id}/servicos/{serviceId}',   [ProfissionalController::class, 'removeService']);
         });
     });
 });
