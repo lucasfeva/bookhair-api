@@ -22,8 +22,8 @@ class ProfissionalFactory extends Factory
     public function definition(): array
     {
         return [
-            'nome'          => $this->faker->name(),
-            'barbearia_id'  => Barbearia::factory(),
+            'nome' => $this->faker->name(),
+            'barbearia_id' => Barbearia::factory(),
         ];
     }
 }

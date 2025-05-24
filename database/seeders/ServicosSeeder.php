@@ -14,11 +14,13 @@ class ServicosSeeder extends Seeder
     public function run(): void
     {
         $barbearias = Barbearia::all();
-        Servico::factory()
-            ->count(10)
-            ->state(fn() => [
-                'barbearia_id' => $barbearias->random()->id,
-            ])
-            ->create();
+
+        // Cada barbearia terá entre 3-8 serviços
+        foreach ($barbearias as $barbearia) {
+            Servico::factory()
+                ->count(rand(3, 8))
+                ->state(['barbearia_id' => $barbearia->id])
+                ->create();
+        }
     }
 }

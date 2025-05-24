@@ -19,12 +19,12 @@ class AgendamentoFactory extends Factory
     public function definition(): array
     {
         return [
-            'cliente_id'      => User::factory(),
+            'cliente_id' => User::factory(),
             'profissional_id' => Profissional::factory(),
-            'servico_id'      => Servico::factory(),
-            'barbearia_id'    => Barbearia::factory(),
-            'data_hora'       => $this->faker->dateTimeBetween('now', '+1 month'),
-            'status'          => $this->faker->randomElement(['agendado', 'concluido', 'cancelado']),
+            'servico_id' => Servico::factory(),
+            'barbearia_id' => Barbearia::factory(),
+            'data_hora' => $this->faker->dateTimeBetween('now', '+1 month'),
+            'status' => $this->faker->randomElement(['agendado', 'concluido', 'cancelado']),
         ];
     }
 }

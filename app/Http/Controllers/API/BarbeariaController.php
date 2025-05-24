@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\BarbeariaRequest;
+use App\Models\Servico;
 use App\Models\Barbearia;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\BarbeariaRequest;
 
 class BarbeariaController extends Controller
 {
@@ -62,8 +63,10 @@ class BarbeariaController extends Controller
     // 5. Serviços de uma barbearia
     public function servicos(int $id): JsonResponse
     {
-        $bar = Barbearia::with('servicos')->findOrFail($id);
-        return response()->json($bar->servicos);
+        Barbearia::findOrFail($id);
+        $servicos = Servico::where('barbearia_id', $id)->get();
+
+        return response()->json($servicos);
     }
 
     // 6. Profissionais de uma barbearia
@@ -99,7 +102,7 @@ class BarbeariaController extends Controller
         $bar->update($request->validated());
         return response()->json($bar);
     }
-    
+
 
     // 10. Remove barbearia
     public function destroy(int $id): JsonResponse

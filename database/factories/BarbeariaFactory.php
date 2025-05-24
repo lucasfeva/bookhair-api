@@ -24,12 +24,12 @@ class BarbeariaFactory extends Factory
     public function definition(): array
     {
         return [
-            'nome'     => $this->faker->company(),
+            'nome' => $this->faker->company(),
             'endereco' => $this->faker->address(),
-            'latitude'  => $this->faker->latitude(),
+            'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
             'telefone' => $this->faker->phoneNumber(),
-            'email'    => $this->faker->unique()->companyEmail(),
+            'email' => $this->faker->unique()->companyEmail(),
         ];
     }
 }

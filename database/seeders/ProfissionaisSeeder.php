@@ -15,30 +15,34 @@ class ProfissionaisSeeder extends Seeder
     public function run(): void
     {
         $barbearias = Barbearia::all();
-        $servicos = Servico::all();
 
-        $profissionais = Profissional::factory()
-            ->count(6)
-            ->state(fn() => [
-                'barbearia_id' => $barbearias->random()->id,
-            ])
-            ->create();
+        // Cada barbearia terá entre 2-4 profissionais
+        foreach ($barbearias as $barbearia) {
+            $profissionais = Profissional::factory()
+                ->count(rand(2, 4))
+                ->state(['barbearia_id' => $barbearia->id])
+                ->create();
 
-        foreach ($profissionais as $prof) {
-            $disponiveis = $servicos->where('barbearia_id', $prof->barbearia_id);
+            $servicosDaBarbearia = Servico::where('barbearia_id', $barbearia->id)->get();
 
-            if ($disponiveis->isEmpty()) {
-                continue;
+            foreach ($profissionais as $prof) {
+                if ($servicosDaBarbearia->isNotEmpty()) {
+                    $attachCount = rand(1, min(3, $servicosDaBarbearia->count()));
+
+                    $servicosParaAnexar = $servicosDaBarbearia
+                        ->random($attachCount)
+                        ->pluck('id')
+                        ->toArray();
+
+                    // Adicionar barbearia_id na tabela pivot
+                    $syncData = [];
+                    foreach ($servicosParaAnexar as $servicoId) {
+                        $syncData[$servicoId] = ['barbearia_id' => $barbearia->id];
+                    }
+
+                    $prof->servicos()->sync($syncData);
+                }
             }
-
-            $attachCount = rand(1, min(3, $disponiveis->count()));
-
-            $prof->servicos()->attach(
-                $disponiveis
-                    ->random($attachCount)
-                    ->pluck('id')
-                    ->toArray()
-            );
         }
     }
 }

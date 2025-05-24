@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class ServicoFactory extends Factory
 {
 
-     protected $model = Servico::class;
+    protected $model = Servico::class;
 
     /**
      * Define the model's default state.
@@ -22,12 +22,11 @@ class ServicoFactory extends Factory
     public function definition(): array
     {
         return [
-            'barbearia_id'    => Barbearia::factory(),
-
-            'nome'            => $this->faker->word(),
-            'descricao'       => $this->faker->sentence(),
+            'barbearia_id' => Barbearia::factory(),
+            'nome' => $this->faker->randomElement(['Corte', 'Barba', 'Bigode', 'Sobrancelha', 'Lavagem']),
+            'descricao' => $this->faker->sentence(),
             'duracao_minutos' => $this->faker->numberBetween(15, 120),
-            'preco'           => $this->faker->randomFloat(2, 20, 200),
+            'preco' => $this->faker->randomFloat(2, 20, 200),
         ];
     }
 }

@@ -24,7 +24,7 @@ class ProfissionalServicoFactory extends Factory
     {
         return [
             'profissional_id' => Profissional::factory(),
-            'servico_id'      => Servico::factory(),
+            'servico_id' => Servico::factory(),
         ];
     }
 }
