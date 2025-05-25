@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ServicosSeeder::class,
             ProfissionaisSeeder::class,
             AgendamentosSeeder::class,
+            ReviewSeeder::class,
         ]);
     }
 }

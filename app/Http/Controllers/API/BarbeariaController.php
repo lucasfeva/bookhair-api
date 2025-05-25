@@ -16,7 +16,15 @@ class BarbeariaController extends Controller
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->query('per_page', 15);
-        return response()->json(Barbearia::paginate($perPage));
+        $barbearias = Barbearia::paginate($perPage);
+
+        $barbearias->getCollection()->transform(function ($barbearia) {
+            $barbearia->nota_media = $barbearia->nota_media;
+            $barbearia->total_avaliacoes = $barbearia->total_avaliacoes;
+            return $barbearia;
+        });
+
+        return response()->json($barbearias);
     }
 
     // 2. Busca por nome
@@ -24,6 +32,12 @@ class BarbeariaController extends Controller
     {
         $q = $request->query('q', '');
         $results = Barbearia::where('nome', 'like', "%{$q}%")->get();
+
+        $results->each(function ($barbearia) {
+            $barbearia->nota_media = $barbearia->nota_media;
+            $barbearia->total_avaliacoes = $barbearia->total_avaliacoes;
+        });
+
         return response()->json($results);
     }
 
@@ -56,7 +70,13 @@ class BarbeariaController extends Controller
     // 4. Mostrar uma barbearia
     public function show(int $id): JsonResponse
     {
-        $bar = Barbearia::findOrFail($id);
+        $bar = Barbearia::with(['reviews' => function ($query) {
+            $query->with('user:id,name')->latest()->take(5);
+        }])->findOrFail($id);
+
+        $bar->nota_media = $bar->nota_media;
+        $bar->total_reviews = $bar->total_reviews;
+
         return response()->json($bar);
     }
 

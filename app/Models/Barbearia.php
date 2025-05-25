@@ -50,4 +50,29 @@ class Barbearia extends Model
     {
         return $this->hasMany(Agendamento::class, 'barbearia_id');
     }
+
+    public function avaliacoes()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function getNotaMediaAttribute()
+    {
+        return $this->avaliacoes()->avg('nota') ?? 0;
+    }
+
+    public function getTotalAvaliacoesAttribute()
+    {
+        return $this->avaliacoes()->count();
+    }
+
+    public function getTotalReviewsAttribute()
+    {
+        return $this->reviews()->count();
+    }
 }
