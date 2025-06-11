@@ -23,6 +23,8 @@ class AuthController extends Controller
         // Validação realizada em RegisterRequest
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
+        $data['name'] = $data['nome'];
+        unset($data['nome']); // <-- ESSA LINHA REMOVE O CAMPO 'nome'
 
         try {
             $user = User::create($data);
